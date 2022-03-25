@@ -37,6 +37,9 @@ describe("Vehicle Yup validation", () => {
             plate:"12390309a",
         }
         await validate(vehicleSchema)(mockReq, mockRes, mockNext)
+
+        
         expect(mockNext).toHaveBeenCalledTimes(1)
+        expect
     })
 })
