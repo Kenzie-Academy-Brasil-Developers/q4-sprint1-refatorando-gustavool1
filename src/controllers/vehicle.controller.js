@@ -1,13 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
+import { serializingVehicles } from "../services/vehicles.service";
 
 
 
 export const createVehicle = (req,res) => {
-    let newVehicle = {
-      ...req.body,
-      id: uuidv4(),
-      acquisition_date: new Date(),
-    };
+    let newVehicle = serializingVehicles(req.body)
   
     let { company } = req;
   

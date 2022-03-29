@@ -26,8 +26,8 @@ export let companies = [
 		address:"endereço",
 		number:213456,
 		state:"SP",
-		city:"Praia Grande"
-
+		city:"Praia Grande",
+    vehicles:[]
 	}
 ];
 

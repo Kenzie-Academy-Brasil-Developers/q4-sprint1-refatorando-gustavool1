@@ -1,19 +1,12 @@
 import bcrypt from "bcryptjs";
-import { v4 as uuidv4 } from "uuid";
 import { companies } from "../routes/company.routes";
-import jwt from "jsonwebtoken";
 import { config } from "../routes/company.routes";   
+import { creatingToken, findingCompany, passwordMatches, serializingCompany } from "../services/company.services";
 
 export const createCompany = async (req,res) => {
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
       
-      let company = {
-        ...req.body,
-        id: uuidv4(),
-        vehicles: [],
-        password: hashedPassword,
-      };
+      const company =  await serializingCompany(req.body) 
   
       companies.push(company);
   
@@ -25,9 +18,9 @@ export const loginCompany = async (req,res) => {
 
     const { cnpj, password } = req.body;
   
-    let company = companies.find((company) => company.cnpj === cnpj);
+    let company = findingCompany(cnpj)
   
-    const match = await bcrypt.compare(password, company.password);
+    const match = await passwordMatches(password, company.password)
   
     if (!company) {
       return res.status(401).json({ message: "Company not found" });
@@ -36,14 +29,12 @@ export const loginCompany = async (req,res) => {
       return res.status(401).json({ message: "User and password missmatch." });
     }
   
-    let token = jwt.sign({ cnpj: cnpj }, config.secret, {
-      expiresIn: config.expiresIn,
-    });
+    let token = creatingToken(cnpj)
   
     res.status(200).json({ token, company });
 }
 
-export const getCompanys = (req, res) => {
+export const getCompanys = (_, res) => {
     res.status(200).json(companies);
 }
 
